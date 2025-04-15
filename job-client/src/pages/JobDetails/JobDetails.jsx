@@ -1,8 +1,9 @@
 import React from 'react'
-import { useLoaderData } from 'react-router-dom'
+import { Link, useLoaderData } from 'react-router-dom'
 import { FaMapMarkerAlt, FaDollarSign } from 'react-icons/fa';
 const JobDetails = () => {
     const {
+        _id,
         title,
         company,
         company_logo,
@@ -79,7 +80,9 @@ const JobDetails = () => {
       </div>
 
       <div className="card-actions justify-end mt-4">
+        <Link to={`/jobApply/${_id}`}>
         <button className="btn btn-primary">Apply Now</button>
+        </Link>
       </div>
     </div>
   </div>

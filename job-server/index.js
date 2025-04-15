@@ -49,6 +49,12 @@ const client = new MongoClient(uri, {
         const result = await jobApplicationCollection.insertOne(application);
         res.send(result);
     })
+    app.get('/job-application',async(req,res)=>{
+        const email=req.query.email;
+        const query={applicant_email:email}
+        const result=await jobApplicationCollection.find(query).toArray();
+        res.send(result);
+      })
 
   
   
