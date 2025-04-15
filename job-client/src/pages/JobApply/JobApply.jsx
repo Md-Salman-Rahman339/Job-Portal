@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import aplicationL from '../../assets/lottie/Job application.json'
 import Lottie from 'lottie-react';
 import useAuth from '../../hooks/useAuth';
+import Swal from 'sweetalert2';
 const JobApply = () => {
     const { id } = useParams();
     //  console.log(id);
@@ -24,6 +25,25 @@ const JobApply = () => {
             github,
             resume
         }
+        fetch('http://localhost:5000/job-applications', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(jobApplication)
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.insertedId) {
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "Your work has been saved",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            })
  
      }
   return (
