@@ -4,7 +4,7 @@ import team1 from '../../assets/team/team1.avif'
 import team2 from '../../assets/team/tema2.avif'
 const Banner = () => {
   return (
-    <div className="hero bg-base-200 min-h-96">
+    <div className="hero bg-base-200 min-h-96 rounded-3xl mb-6 ">
              <div className="hero-content flex-col lg:flex-row-reverse">
                  <div className='flex-1'>
                  <motion.img

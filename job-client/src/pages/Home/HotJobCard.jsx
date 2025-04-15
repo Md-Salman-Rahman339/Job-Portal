@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const HotJobCard = ({job}) => {
     const { _id,title, company, company_logo, requirements, description, location, salaryRange } = job;
   return (
-    <div className="card card-compact  shadow-xl rounded-2xl  border border-b-fuchsia-700">
+    <div className="card card-compact  shadow-xl rounded-2xl  border border-b-fuchsia-700 mb-6">
              <div className='flex gap-2 m-2'>
                  <figure>
                      <img
