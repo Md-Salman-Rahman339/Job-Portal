@@ -1,5 +1,5 @@
 import React from 'react'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import aplicationL from '../../assets/lottie/Job application.json'
 import Lottie from 'lottie-react';
 import useAuth from '../../hooks/useAuth';
@@ -8,7 +8,7 @@ const JobApply = () => {
     const { id } = useParams();
     //  console.log(id);
     const {user}=useAuth();
-
+    const navigate=useNavigate();
  
      const submitJobApplication = e => {
          e.preventDefault();
@@ -42,6 +42,7 @@ const JobApply = () => {
                         showConfirmButton: false,
                         timer: 1500
                     });
+                    navigate('/myApplications')
                 }
             })
  
