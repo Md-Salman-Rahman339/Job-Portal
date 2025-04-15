@@ -2,9 +2,12 @@ import React from 'react'
 import { useParams } from 'react-router-dom';
 import aplicationL from '../../assets/lottie/Job application.json'
 import Lottie from 'lottie-react';
+import useAuth from '../../hooks/useAuth';
 const JobApply = () => {
     const { id } = useParams();
-     console.log(id);
+    //  console.log(id);
+    const {user}=useAuth();
+
  
      const submitJobApplication = e => {
          e.preventDefault();
@@ -14,6 +17,13 @@ const JobApply = () => {
          const resume = form.resume.value;
  
          console.log(linkedIn, github, resume);
+         const jobApplication = {
+            job_id: id,
+            applicant_email: user.email,
+            linkedIn,
+            github,
+            resume
+        }
  
      }
   return (
