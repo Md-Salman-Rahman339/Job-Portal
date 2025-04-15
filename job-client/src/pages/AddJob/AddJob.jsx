@@ -35,7 +35,7 @@ const AddJob = () => {
                         showConfirmButton: false,
                         timer: 1500
                     });
-                    navigate('/myApplications')
+                    navigate('/myPostedJobs')
                 }
             })
     }
@@ -133,6 +133,12 @@ const AddJob = () => {
             <span className="label-text font-medium">Job Responsibilities</span>
           </label>
           <textarea name="responsibilities" className="textarea textarea-bordered w-full min-h-[100px]" placeholder="Write each responsibility in a new line" required />
+        </div>
+        <div>
+          <label className="label">
+            <span className="label-text font-medium">Deadline</span>
+          </label>
+          <textarea name="deadline" className="textarea textarea-bordered w-full min-h-[120px]" placeholder="Job Deadline" required />
         </div>
 
         {/* Submit Button */}
