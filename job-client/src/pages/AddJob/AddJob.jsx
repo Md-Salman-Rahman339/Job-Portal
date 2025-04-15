@@ -1,10 +1,48 @@
 import React from 'react';
-
+import useAuth from '../../hooks/useAuth';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 const AddJob = () => {
+    const {user}=useAuth();
+    const navigate=useNavigate();
+    const handleAddJob = e => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        // console.log(formData.entries())
+        const initialData = Object.fromEntries(formData.entries());
+        console.log(initialData)
+        const { min, max, currency, ...newJob } = initialData;
+        console.log(min, max, currency, newJob)
+        newJob.salaryRange = { min, max, currency }
+      
+        newJob.requirements = newJob.requirements.split('\n');
+        newJob.responsibilities = newJob.responsibilities.split('\n')
+        console.log(newJob)
+        fetch('http://localhost:5000/jobs', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(newJob)
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.insertedId) {
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "Job Has been added.",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    navigate('/myApplications')
+                }
+            })
+    }
   return (
     <div className="max-w-4xl mx-auto p-6 bg-base-200 shadow-xl rounded-2xl mt-10 mb-10">
       <h2 className="text-3xl font-bold mb-6 text-center">Post a New Job</h2>
-      <form className="space-y-6">
+      <form onSubmit={handleAddJob} className="space-y-6">
         {/* Job Title & Location */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
