@@ -15,6 +15,29 @@ const express = require('express');
  app.use(express.json());
  app.use(cookieParser());
 
+ const logger = (req, res, next) => {
+    console.log('inside the logger');
+    next();
+}
+
+const verifyToken = (req, res, next) => {
+    // console.log('inside verify token middleware', req.cookies)
+    const token = req?.cookies?.token;
+
+    if (!token) {
+        return res.status(401).send({ message: 'Unauthorized access' })
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) {
+            return res.status(401).send({ message: 'Unauthorized access' })
+        }
+        // 
+        next();
+    })
+    
+}
+
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ieavp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -52,7 +75,7 @@ const client = new MongoClient(uri, {
         .send({success:true})
       })
 
-      app.get('/jobs',async(req,res)=>{
+      app.get('/jobs',logger, async(req,res)=>{
         const email = req.query.email;
              let query = {};
              if (email) {
@@ -68,7 +91,7 @@ const client = new MongoClient(uri, {
         const result=await jobsCollection.findOne(query)
         res.send(result);
       })
-      app.post('/job-applications', async (req, res) => {
+      app.post('/job-applications', verifyToken, async (req, res) => {
         const application = req.body;
         const result = await jobApplicationCollection.insertOne(application);
         const id = application.job_id;
