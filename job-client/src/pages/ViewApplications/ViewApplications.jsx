@@ -6,6 +6,32 @@ const ViewApplications = () => {
   const appsArray = Array.isArray(applications)
     ? applications
     : applications?.data || [];
+    const handleStatusUpdate = (e, id) => {
+        console.log(e.target.value, id)
+        const data = {
+            status: e.target.value
+        }
+        fetch(`http://localhost:5000/job-applications/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.modifiedCount) {
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "Status Has been updated.",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            })
+    }
+
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -18,8 +44,8 @@ const ViewApplications = () => {
             <tr>
               <th>#</th>
               <th>Email</th>
-              <th>Job</th>
-              <th>Favorite Color</th>
+              <th>Status</th>
+              <th>Update Status</th>
             </tr>
           </thead>
           <tbody>
@@ -29,6 +55,18 @@ const ViewApplications = () => {
                 <td>{app.applicant_email}</td>
                 <td>{app.jobTitle || 'N/A'}</td>
                 <td>{app.favoriteColor || '—'}</td>
+                <td>
+                                     <select
+                                         onChange={(e) => handleStatusUpdate(e, app._id)}
+                                         defaultValue={app.status || 'Change Status'}
+                                         className="select select-bordered select-xs w-full max-w-xs">
+                                         <option disabled>Change Status</option>
+                                         <option>Under Review</option>
+                                         <option>Set Interview</option>
+                                         <option>Hired</option>
+                                         <option>Rejected</option>
+                                     </select>
+                                 </td>
               </tr>
             ))}
           </tbody>
