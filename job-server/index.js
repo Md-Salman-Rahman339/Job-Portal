@@ -116,25 +116,33 @@ const client = new MongoClient(uri, {
         const updateResult = await jobsCollection.updateOne(filter, updatedDoc);
         res.send(result);
     })
-    app.get('/job-application',async(req,res)=>{
-        const email=req.query.email;
-        const query={applicant_email:email}
-        const result=await jobApplicationCollection.find(query).toArray();
+    app.get('/job-application', verifyToken, async (req, res) => {
+        const email = req.query.email;
+        const query = { applicant_email: email }
 
+        console.log(req.cookies?.token)
+        // token email !== query email
+        if (req.user.email !== req.query.email) {
+            return res.status(403).send({ message: 'forbidden access' })
+        }
 
+        const result = await jobApplicationCollection.find(query).toArray();
+
+        // fokira way to aggregate data
         for (const application of result) {
             // console.log(application.job_id)
             const query1 = { _id: new ObjectId(application.job_id) }
             const job = await jobsCollection.findOne(query1);
-            if(job){
+            if (job) {
                 application.title = job.title;
                 application.location = job.location;
                 application.company = job.company;
                 application.company_logo = job.company_logo;
             }
         }
+
         res.send(result);
-      })
+    })
 
       app.post('/jobs', async(req, res) =>{
         const newJob = req.body;
