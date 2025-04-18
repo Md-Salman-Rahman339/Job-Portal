@@ -9,7 +9,11 @@ const express = require('express');
  const { MongoClient, ServerApiVersion,ObjectId } = require('mongodb');
  
  app.use(cors({
-    origin: ['http://localhost:5173'],
+    origin: ['http://localhost:5173',
+        'https://job-portal-522ac.web.app',
+        'https://job-portal-522ac.firebaseapp.com',
+
+    ],
     credentials: true
 }));
  app.use(express.json());
@@ -40,7 +44,8 @@ const verifyToken = (req, res, next) => {
 
 
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ieavp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ieavp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0&tls=true`;
+
 
 const client = new MongoClient(uri, {
     serverApi: {
@@ -53,10 +58,10 @@ const client = new MongoClient(uri, {
   async function run() {
     try {
       // Connect the client to the server	(optional starting in v4.7)
-      await client.connect();
+    //   await client.connect();
       // Send a ping to confirm a successful connection
-      await client.db("admin").command({ ping: 1 });
-      console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    //   await client.db("admin").command({ ping: 1 });
+    //   console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
 
       const jobsCollection=client.db('jobPortal').collection('jobs');
@@ -68,7 +73,8 @@ const client = new MongoClient(uri, {
         res
            .cookie('token',token,{
             httpOnly:true,
-            secure:false,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict'
         
            })
 
@@ -182,3 +188,5 @@ const client = new MongoClient(uri, {
   app.listen(port, () => {
       console.log(`Job is waiting at: ${port}`)
   })
+
+
